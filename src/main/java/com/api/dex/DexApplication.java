@@ -8,17 +8,18 @@ import org.springframework.boot.autoconfigure.web.servlet.MultipartAutoConfigura
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
-@SpringBootApplication(exclude = {MongoAutoConfiguration.class, // spring boot 에서 default 사용하는거 뺌
-		MongoDataAutoConfiguration.class,  // 현재 하이버네이트 방언이 Mysql 로 되어있음.
-		MultipartAutoConfiguration.class}) // Tomcat 의 Multipart Library 사용하기 때문에 spring boot 의 Multipart 기능을 exclude 함.
+//@SpringBootApplication(exclude = {MongoAutoConfiguration.class, // spring boot 에서 default 사용하는거 뺌
+//		MongoDataAutoConfiguration.class,  // 현재 하이버네이트 방언이 Mysql 로 되어있음.
+//		MultipartAutoConfiguration.class}) // Tomcat 의 Multipart Library 사용하기 때문에 spring boot 의 Multipart 기능을 exclude 함.
+@SpringBootApplication
 public class DexApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
 		SpringApplication.run(DexApplication.class, args);
 	}
 
-	@Override protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-		return builder.sources(DexApplication.class);
-	}
+//	@Override protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+//		return builder.sources(DexApplication.class);
+//	}
 
 }

@@ -1,9 +1,6 @@
 package com.api.dex.domain;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -12,22 +9,20 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.io.Serializable;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@DynamicUpdate
-@DynamicInsert
 @Data
-@Entity
-@Table(name = "member")
+@EqualsAndHashCode(callSuper=false)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity(name="member")
 public class Member extends BaseEntity implements Serializable  {
 
     private static final long serialVersionUID = -6430942442101448953L;
 
     private MemberRole memberRole;
 
-    @Column(unique = true, length = 50)
+    @Column(unique = true, length = 100)
     private String account;
 
-    @Column(length = 100)
+    @Column(length = 500)
     private String password;
 
     @Column(length = 100)

@@ -4,15 +4,17 @@ import com.api.dex.domain.Member;
 import com.api.dex.domain.MemberRepository;
 import com.api.dex.domain.MemberRole;
 import com.api.dex.dto.MemberDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
 public class MemberService {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -28,10 +30,11 @@ public class MemberService {
                 .token(memberDto.getToken())
                 .memberRole(memberDto.getMemberRole())
                 .build();
-        return member;
+        return memberRepository.save(member);
     }
 
     public Member insertMember(MemberDto memberDto){
+        logger.info("insert member:::" + memberDto.getAccount());
         memberRepository.findByAccount(memberDto.getAccount())
                 .orElseThrow(() -> new IllegalArgumentException("이미 가입 되어 있는 계정입니다."));
 
