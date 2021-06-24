@@ -2,6 +2,7 @@ package com.api.dex.listener;
 
 import com.api.dex.domain.Member;
 import com.api.dex.domain.MemberRepository;
+import com.api.dex.domain.MemberRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class ServletContextListenerImpl implements ServletContextListener {
         autowireCapableBeanFactory.autowireBean(this);
 
         if(memberRepository.count() == 0){
-            Member member = new Member("dexter", passwordEncoder.encode("0526"), "박정수", null);
+            Member member = new Member(new MemberRole(MemberRole.RoleType.ROLE_ADMIN),"dexter", passwordEncoder.encode("0526"), "박정수", null);
             memberRepository.save(member);
         }
     }

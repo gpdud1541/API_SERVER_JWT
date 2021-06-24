@@ -22,6 +22,8 @@ public class Member extends BaseEntity implements Serializable  {
 
     private static final long serialVersionUID = -6430942442101448953L;
 
+    private MemberRole memberRole;
+
     @Column(unique = true, length = 50)
     private String account;
 
@@ -35,7 +37,8 @@ public class Member extends BaseEntity implements Serializable  {
     private String token;
 
     @Builder
-    public Member(String account, String password, String name, String token) {
+    public Member(MemberRole memberRole, String account, String password, String name, String token) {
+        this.memberRole = memberRole;
         this.account = account;
         this.password = password;
         this.name = name;

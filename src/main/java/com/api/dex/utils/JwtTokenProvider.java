@@ -27,7 +27,7 @@ public class JwtTokenProvider {
 //    }
 
     // 토큰 유효시간 30분
-    private long tokenValidTime = 30 * 60 * 1000L;
+//    private long tokenValidTime = 30 * 60 * 1000L;
 
     @Autowired
     private SecurityUserService securityUserService;
@@ -39,7 +39,7 @@ public class JwtTokenProvider {
     }
 
     // JWT 토큰 생성
-    public String createToken(String userPk, MemberRole roles) {
+    public String createToken(String userPk, MemberRole roles, long tokenValidTime) {
         Claims claims = Jwts.claims().setSubject(userPk); // JWT payload 에 저장되는 정보단위
         claims.put("roles", roles.getClass().getName()); // 정보는 key / value 쌍으로 저장된다.
         Date now = new Date();
