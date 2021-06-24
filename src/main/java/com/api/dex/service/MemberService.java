@@ -2,6 +2,7 @@ package com.api.dex.service;
 
 import com.api.dex.domain.Member;
 import com.api.dex.domain.MemberRepository;
+import com.api.dex.domain.MemberRole;
 import com.api.dex.dto.MemberDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,6 +34,8 @@ public class MemberService {
     public Member insertMember(MemberDto memberDto){
         memberRepository.findByAccount(memberDto.getAccount())
                 .orElseThrow(() -> new IllegalArgumentException("이미 가입 되어 있는 계정입니다."));
+
+        if(memberDto.getMemberRole() == null) memberDto.setMemberRole(new MemberRole(MemberRole.RoleType.ROLE_USER));
 
         return save(memberDto);
     }

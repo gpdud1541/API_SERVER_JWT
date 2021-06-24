@@ -38,6 +38,10 @@ dependencies {
 	implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.7.3'
 	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 
+	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
 	compileOnly 'org.projectlombok:lombok'
