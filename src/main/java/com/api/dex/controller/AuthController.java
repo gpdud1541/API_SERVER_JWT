@@ -6,7 +6,6 @@ import com.api.dex.domain.MemberRole;
 import com.api.dex.dto.MemberDto;
 import com.api.dex.service.MemberService;
 import com.api.dex.utils.JwtTokenProvider;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.spring.web.json.Json;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 @RestController
@@ -39,7 +38,7 @@ public class AuthController {
 
     // 회원가입
     @PostMapping("/sign")
-    public ResponseEntity<JSONObject> sign(@RequestBody MemberDto memberDto) {
+    public ResponseEntity<JSONPObject> sign(@RequestBody MemberDto memberDto) {
         JSONObject items = new JSONObject();
         JSONObject data = new JSONObject();
 
@@ -59,7 +58,7 @@ public class AuthController {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<JSONObject> login(@RequestBody Map<String, String> user) {
+    public ResponseEntity login(@RequestBody Map<String, String> user) {
         HttpHeaders httpHeaders = new HttpHeaders();
         JSONObject items = new JSONObject();
         JSONObject data = new JSONObject();
@@ -79,7 +78,7 @@ public class AuthController {
         data.put("name", member.getName());
         items.put("items", data);
 
-        return new ResponseEntity<>(items, httpHeaders, HttpStatus.OK);
+        return new ResponseEntity(items, httpHeaders, HttpStatus.OK);
     }
 
 
@@ -90,9 +89,9 @@ public class AuthController {
     }
 
     @GetMapping("/info")
-    public ResponseEntity<JSONObject> info(){
-        JSONObject items = new JSONObject();
-        JSONObject data = new JSONObject();
+    public ResponseEntity info(){
+        Json items = new JSObject();
+        JSObject data = new JSObject();
 
         Member member = memberRepository.findByAccount("dexter")
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
@@ -105,6 +104,6 @@ public class AuthController {
         logger.info("controller info:::" + data.get("name"));
         logger.info("controller info:::" + items.get("items"));
 
-        return new ResponseEntity<>(items, HttpStatus.OK);
+        return new ResponseEntity(items, HttpStatus.OK);
     }
 }
