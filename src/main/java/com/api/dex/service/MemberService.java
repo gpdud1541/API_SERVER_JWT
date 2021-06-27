@@ -35,12 +35,12 @@ public class MemberService {
 
     public Member insertMember(MemberDto memberDto){
         logger.info("insert member:::" + memberDto.getAccount());
-        memberRepository.findByAccount(memberDto.getAccount())
-                .orElseThrow(() -> new IllegalArgumentException("이미 가입 되어 있는 계정입니다."));
-
-        if(memberDto.getMemberRole() == null) memberDto.setMemberRole(new MemberRole(MemberRole.RoleType.ROLE_USER));
-
-        return save(memberDto);
+        if(memberRepository.findByAccount(memberDto.getAccount()).get() == null){
+            if(memberDto.getMemberRole() == null) memberDto.setMemberRole(new MemberRole(MemberRole.RoleType.ROLE_USER));
+            return save(memberDto);
+        }else{
+            return null;
+        }
     }
 
     public Member getMember(MemberDto memberDto){

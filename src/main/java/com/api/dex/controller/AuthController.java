@@ -3,18 +3,22 @@ package com.api.dex.controller;
 import com.api.dex.domain.Member;
 import com.api.dex.domain.MemberRepository;
 import com.api.dex.domain.MemberRole;
+import com.api.dex.domain.SecurityUser;
 import com.api.dex.dto.MemberDto;
 import com.api.dex.service.MemberService;
+import com.api.dex.utils.JsonParser;
 import com.api.dex.utils.JwtTokenProvider;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.spring.web.json.Json;
 
 import java.util.Map;
 
@@ -35,33 +39,39 @@ public class AuthController {
     private MemberRepository memberRepository;
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private JsonParser jsonParser;
 
     // 회원가입
     @PostMapping("/sign")
-    public ResponseEntity<JSONPObject> sign(@RequestBody MemberDto memberDto) {
-        JSONObject items = new JSONObject();
-        JSONObject data = new JSONObject();
+    public ResponseEntity<String> sign(@RequestBody MemberDto memberDto) {
+        Gson gson = new Gson();
+        JsonObject items = new JsonObject();
+        JsonObject data = new JsonObject();
 
         logger.info("controller sign:::" + memberDto.getAccount());
 
         Member member = memberService.insertMember(memberDto);
 
-        data.put("account", member.getAccount());
-        data.put("name", member.getName());
-        items.put("items", data);
-        items.put("message", "sign for success!");
+        if(member != null){
+            data.addProperty("account", member.getAccount());
+            data.addProperty("name", member.getName());
+            items.add("items", data);
+            items.addProperty("message", "sign for success!");
+        }else{
+            items.addProperty("message", "존재 하는 아이디 입니다.");
+        }
 
-        logger.info("controller sign:::" + member.getAccount());
-
-        return new ResponseEntity<>(items, HttpStatus.OK);
+        return new ResponseEntity<>(gson.toJson(items), HttpStatus.OK);
     }
 
     // 로그인
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody Map<String, String> user) {
+        Gson gson = new Gson();
         HttpHeaders httpHeaders = new HttpHeaders();
-        JSONObject items = new JSONObject();
-        JSONObject data = new JSONObject();
+        JsonObject items = new JsonObject();
+        JsonObject data = new JsonObject();
         Member member = memberRepository.findByAccount(user.get("account"))
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
         if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
@@ -74,36 +84,40 @@ public class AuthController {
         httpHeaders.add("accessToken", accessToken);
         httpHeaders.add("refreshToken", refreshToken);
 
-        data.put("account", member.getAccount());
-        data.put("name", member.getName());
-        items.put("items", data);
+        data.addProperty("account", member.getAccount());
+        data.addProperty("name", member.getName());
+        items.add("items", data);
 
-        return new ResponseEntity(items, httpHeaders, HttpStatus.OK);
+        return new ResponseEntity(gson.toJson(items), httpHeaders, HttpStatus.OK);
     }
 
 
     @PostMapping("/authority")
-    public ResponseEntity<JSONObject> isValidateToken(@RequestBody String account){
+    public ResponseEntity<JsonObject> isValidateToken(@RequestBody String account){
 
         return null;
     }
 
     @GetMapping("/info")
-    public ResponseEntity info(){
-        Json items = new JSObject();
-        JSObject data = new JSObject();
+    public ResponseEntity info(Authentication authentication){
+        Gson gson = new Gson();
+        JsonObject items = new JsonObject();
+        JsonObject data = new JsonObject();
 
-        Member member = memberRepository.findByAccount("dexter")
-                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
+        SecurityUser securityUser = (SecurityUser) authentication.getPrincipal();
 
-        data.put("account", member.getAccount());
-        data.put("name", member.getName());
-        items.put("items", data);
+        String account = securityUser.getMember().getAccount();
+        String name = securityUser.getUsername();
+        String role = securityUser.getMember().getMemberRole().getRoleName().name();
 
-        logger.info("controller info:::" + member.getAccount());
+        data.addProperty("account", account);
+        data.addProperty("name", name);
+        data.addProperty("role", role);
+        items.add("items", data);
+
         logger.info("controller info:::" + data.get("name"));
         logger.info("controller info:::" + items.get("items"));
 
-        return new ResponseEntity(items, HttpStatus.OK);
+        return new ResponseEntity<>(gson.toJson(items), HttpStatus.OK);
     }
 }
