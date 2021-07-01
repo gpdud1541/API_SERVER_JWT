@@ -5,16 +5,16 @@ jdk:
 branches:
   only:
     - master
-
+    
+# Permission Denied Error 때문에 추가
+before_install:
+  - chmod +x ./gradlew
+  
 # Travis CI Server의 Home
 cache:
   directories:
     - '$HOME/.m2/repository'
     - '$HOME/.gradle'
-
-# Permission Denied Error 때문에 추가
-before_install:
-  - chmod +x ./gradlew
 
 script: "./gradlew clean build"
 
