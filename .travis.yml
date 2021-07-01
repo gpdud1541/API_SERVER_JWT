@@ -1,14 +1,15 @@
 language: java
+    
+# Permission Denied Error 때문에 추가
+before_install:
+  - chmod +x ./gradlew
+
 jdk:
   - openjdk8
 
 branches:
   only:
     - master
-    
-# Permission Denied Error 때문에 추가
-before_install:
-  - chmod +x ./gradlew
   
 # Travis CI Server의 Home
 cache:
