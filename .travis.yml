@@ -1,26 +1,26 @@
 language: java
 jdk:
  - openjdk11
- 
- branches:
-    only:
-     - master
+
+branches:
+ only:
+   - master
 
 # Travis CI 서버의 Home
 cache:
-    directories:
-         - '$HOME/.m2/repository'
-         - '$HOME/.gradle'
-         
+ directories:
+   - '$HOME/.m2/repository'
+   - '$HOME/.gradle'
+
 before_install:
  - chmod +x gradlew
  
- script: "sudo apt-get install dos2unix"
- script: "dos2unix ./gradlew"
- script: "./gradlew clean build"
- 
- # CI 실행 완료 시 메일로 알람
- notifications:
-    email:
-        recipients:
-         - gpdud1541@gmail.com
+script: "sudo apt-get install dos2unix"
+script: "dos2unix ./gradlew"     
+script: "./gradlew clean build"
+     
+# CI 실행 완료 시 메일로 알람
+notifications:
+ email:
+   recipients: 
+     - gpdud1541@gmail.com
