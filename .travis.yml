@@ -1,26 +1,24 @@
 language: java
-    
-# Permission Denied Error 때문에 추가
-before_install:
-  - chmod +x ./gradlew
-
 jdk:
-  - openjdk8
+ - openjdk8
+ 
+ branches:
+    only:
+     - master
 
-branches:
-  only:
-    - master
-  
-# Travis CI Server의 Home
+# Travis CI 서버의 Home
 cache:
-  directories:
-    - '$HOME/.m2/repository'
-    - '$HOME/.gradle'
-
-script: "./gradlew clean build"
-
-# CI 완료시 메일 알람
-notifications:
-  email:
-    recipients:
-      - gpdud1541@gmail.com
+    directories:
+         - '$HOME/.m2/repository'
+         - '$HOME/.gradle'
+         
+before_install:
+ - chmod +x gradlew
+ 
+ script: "./gradlew clean build"
+ 
+ # CI 실행 완료 시 메일로 알람
+ notifications:
+    email:
+        recipients:
+         - gpdud1541@gmail.com
